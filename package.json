@@ -1,0 +1,31 @@
+{
+  "name": "co-runner",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "bench": "node test/bench.js",
+    "test": "standard && mocha test/index.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orangemi/co-runner.git"
+  },
+  "keywords": [
+    "co",
+    "generator"
+  ],
+  "author": "Orange Mi <orangemiwj@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/orangemi/co-runner/issues"
+  },
+  "homepage": "https://github.com/orangemi/co-runner#readme",
+  "dependencies": {
+    "co": "^4.6.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0",
+    "standard": "^10.0.2"
+  }
+}
