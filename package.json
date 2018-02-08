@@ -1,5 +1,5 @@
 {
-  "name": "co-runner",
+  "name": "co-job",
   "version": "0.1.2",
   "description": "",
   "main": "lib/index.js",
@@ -18,9 +18,9 @@
   "author": "Orange Mi <orangemiwj@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/orangemi/co-runner/issues"
+    "url": "https://github.com/orangemi/co-job/issues"
   },
-  "homepage": "https://github.com/orangemi/co-runner#readme",
+  "homepage": "https://github.com/orangemi/co-job#readme",
   "dependencies": {
     "co": "^4.6.0"
   },

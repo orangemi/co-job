@@ -2,7 +2,7 @@
 
 const co = require('co')
 const assert = require('assert')
-const coRunner = require('../lib')
+const coJob = require('../lib')
 
 function * job (index) {
   yield done => setTimeout(done, Math.random() * 100 + 100)
@@ -11,7 +11,7 @@ function * job (index) {
 function * run (runners, jobCount) {
   console.log('run', jobCount, 'jobs in', runners, 'runners')
   const start = Date.now()
-  const runner = coRunner(runners)
+  const runner = coJob(runners)
   for (let i = 0; i < jobCount; i++) {
     runner.push(job(i))
   }

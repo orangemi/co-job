@@ -3,15 +3,15 @@
 
 const co = require('co')
 const assert = require('assert')
-const coRunner = require('../lib')
+const coJob = require('../lib')
 describe('co-runner test suite', function () {
   it('init with no argument.', function () {
-    const runner = coRunner()
+    const runner = coJob()
     assert(runner)
   })
 
   it('init with argument.', function () {
-    const runner = coRunner(2)
+    const runner = coJob(2)
     assert(runner)
   })
 
@@ -21,7 +21,7 @@ describe('co-runner test suite', function () {
       return 'ok'
     }
     return co(function * () {
-      const runner = coRunner()
+      const runner = coJob()
       runner.push(job)
       const result = yield runner.end()
       assert(result)
@@ -38,7 +38,7 @@ describe('co-runner test suite', function () {
       })
     }
     return co(function * () {
-      const runner = coRunner()
+      const runner = coJob()
       for (let i = 0; i < 5; i++) runner.push(job(i))
       const result = yield runner.end()
       assert(result)
@@ -54,7 +54,7 @@ describe('co-runner test suite', function () {
       })
     }
     return co(function * () {
-      const runner = coRunner(2)
+      const runner = coJob(2)
       for (let i = 0; i < 10; i++) runner.push(job(i))
       const result = yield runner.end()
       assert(result)
@@ -76,7 +76,7 @@ describe('co-runner test suite', function () {
       return isLongRunning
     }
     return co(function * () {
-      const runner = coRunner(2)
+      const runner = coJob(2)
       runner.push(longJob())
       runner.push(shortJob())
       const result = yield runner.end()
@@ -99,7 +99,7 @@ describe('co-runner test suite', function () {
       return isLongRunning
     }
     return co(function * () {
-      const runner = coRunner(2)
+      const runner = coJob(2)
       runner.push(longJob())
       runner.push(shortJob())
       runner.push(shortJob())
@@ -120,7 +120,7 @@ describe('co-runner test suite', function () {
       return i
     }
     return co(function * () {
-      const runner = coRunner(2)
+      const runner = coJob(2)
       runner.push(longJob())
       runner.push(shortJob(1))
       yield done => setTimeout(done, 5)
