@@ -34,3 +34,11 @@ push yieldable job into runner include `Promise`, `generator` and normal `functi
 
 ### Runner.end(): Promise<result>
 return a Promise with final result for all jobs
+
+### Runner Event: 'done'
+Emit when one of the yieldable job finished.
+- job result: <***any***>
+- job sequence: <***int***> present as the job id as the sequence the job pushed.
+
+### Runner Event: 'drain'
+Emit when one of the cocurrency runner finished its job squence.
