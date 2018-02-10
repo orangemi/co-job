@@ -23,8 +23,11 @@ co(function * () {
 - [co](https://github.com/tj/co)
 
 ## API
-### constructor(limit: Number): Runner
-Return a job runner with limited cocurrency runners
+### constructor(limit: Number, options: Object): Runner
+Return a job runner with limited cocurrency runners.
+
+options:
+- retainResult: <***boolean***> retain the result when run `runner.end()`. Or it would be an empty array. Default: true
 
 ### Runner.push(job: yieldable): void
 push yieldable job into runner include `Promise`, `generator` and normal `function`
