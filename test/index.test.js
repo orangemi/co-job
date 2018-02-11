@@ -4,7 +4,7 @@
 const co = require('co')
 const assert = require('assert')
 const coJob = require('../lib')
-describe('co-runner test suite', function () {
+describe('co-job test suite', function () {
   it('init with no argument.', function () {
     const runner = coJob()
     assert(runner)
@@ -17,7 +17,7 @@ describe('co-runner test suite', function () {
 
   it('run only 1 job. should return array with job result', function () {
     function * job () {
-      yield done => setTimeout(done, 10)
+      yield function (done) { return setTimeout(done, 10) }
       return 'ok'
     }
     return co(function * () {
@@ -32,7 +32,7 @@ describe('co-runner test suite', function () {
   })
 
   it('run only sequence jobs on 1 runner. result should be in sequence', function () {
-    function * job (index) {
+    function job (index) {
       return new Promise(function (resolve) {
         resolve(index + 1)
       })
@@ -67,11 +67,11 @@ describe('co-runner test suite', function () {
     let isLongRunning = false
     function * longJob () {
       isLongRunning = true
-      yield done => setTimeout(done, 10)
+      yield function (done) { setTimeout(done, 10) }
       isLongRunning = false
     }
     function * shortJob () {
-      yield done => setTimeout(done, 1)
+      yield function (done) { setTimeout(done, 1) }
       assert.strictEqual(isLongRunning, true)
       return isLongRunning
     }
@@ -90,11 +90,11 @@ describe('co-runner test suite', function () {
     let isLongRunning = false
     function * longJob () {
       isLongRunning = true
-      yield done => setTimeout(done, 10)
+      yield function (done) { setTimeout(done, 10) }
       isLongRunning = false
     }
     function * shortJob () {
-      yield done => setTimeout(done, 1)
+      yield function (done) { setTimeout(done, 1) }
       assert.strictEqual(isLongRunning, true)
       return isLongRunning
     }
@@ -113,23 +113,81 @@ describe('co-runner test suite', function () {
 
   it('if one of runners finished all job. it should be start again if new jobs comming', function () {
     function * longJob () {
-      yield done => setTimeout(done, 10)
+      yield function (done) { setTimeout(done, 10) }
     }
     function * shortJob (i) {
-      yield done => setTimeout(done, 1)
+      yield function (done) { setTimeout(done, 1) }
       return i
     }
     return co(function * () {
       const runner = coJob(2)
       runner.push(longJob())
       runner.push(shortJob(1))
-      yield done => setTimeout(done, 5)
+      yield function (done) { setTimeout(done, 5) }
       runner.push(shortJob(2))
       const result = yield runner.end()
       assert(result)
       assert.strictEqual(result.length, 3)
       assert.strictEqual(result[1], 1)
       assert.strictEqual(result[2], 2)
+    })
+  })
+
+  it('runner should emit `done` event with sequence', function () {
+    function job (index) {
+      return new Promise(function (resolve) {
+        setTimeout(function () {
+          resolve(index)
+        }, 10)
+      })
+    }
+    return co(function * () {
+      const runner = coJob(1)
+      let received = 0
+      runner.push(job(1))
+      runner.push(job(2))
+      runner.on('done', function (result, index) {
+        assert.strictEqual(index, received++)
+        assert.strictEqual(result, index + 1)
+      })
+      yield runner.end()
+      assert.strictEqual(received, 2)
+    })
+  })
+
+  it('runner should emit `drain` event when runner drained', function () {
+    function job (index) {
+      return new Promise(function (resolve) {
+        setTimeout(function () {
+          resolve(index)
+        }, 10)
+      })
+    }
+    return co(function * () {
+      const runner = coJob(1)
+      let isDrained = false
+      runner.push(job(1))
+      runner.on('drain', function () {
+        isDrained = true
+      })
+      yield runner.end()
+      assert.strictEqual(isDrained, true)
+    })
+  })
+
+  it('runner should not retain if retainResult === false', function () {
+    function job (index) {
+      return new Promise(function (resolve) {
+        setTimeout(function () {
+          resolve(index)
+        }, 10)
+      })
+    }
+    return co(function * () {
+      const runner = coJob(1, {retainResult: false})
+      runner.push(job(1))
+      const result = yield runner.end()
+      assert.strictEqual(result.length, 0)
     })
   })
 })
