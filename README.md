@@ -1,5 +1,7 @@
 co-job
 ======
+This project is deprecated. I recommend to use [promise-limit](https://npmjs.com/package/promise-limit). Its implementation is much better.
+
 Run jobs in limited runners. Jobs can dynamicly be pushed in current runner
 
 [![Build Status](https://travis-ci.org/orangemi/co-job.svg?branch=master)](https://travis-ci.org/orangemi/co-job)
